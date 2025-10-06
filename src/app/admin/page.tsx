@@ -79,7 +79,6 @@ const AdminDashboard: React.FC = () => {
 
       // Cargar reservas recientes (últimas 5)
       const allBookings = await apiService.getAdminBookings();
-      console.log("Bookings data from API:", allBookings);
 
       const recentBookings = allBookings
         .sort(

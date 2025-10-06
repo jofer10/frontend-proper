@@ -25,6 +25,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         return;
       }
 
+      // Verificar inmediatamente si hay token válido
+      const token = localStorage.getItem("admin_token");
+      if (!token) {
+        // Limpiar cualquier cache y redirigir inmediatamente
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.replace("/admin/login");
+        return;
+      }
+
       try {
         const token = localStorage.getItem("admin_token");
         if (!token) {
@@ -67,7 +77,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         setIsAuthenticated(true);
       } catch (error) {
         // Error de red o token inválido - limpiar y redirigir silenciosamente
-        console.log("Auth check failed, redirecting to login");
         localStorage.clear();
         sessionStorage.clear();
         window.location.replace("/admin/login");
@@ -78,6 +87,54 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
     checkAuth();
   }, [router, isLoginPage]);
+
+  // Efecto adicional para detectar cuando el usuario regresa a la página
+  useEffect(() => {
+    // Solo agregar listeners si no estamos en la página de login
+    if (isLoginPage) return;
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        // Solo verificar si no estamos cargando y no hay autenticación
+        if (!isLoading && !isAuthenticated) {
+          const token = localStorage.getItem("admin_token");
+          if (!token) {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.replace("/admin/login");
+          }
+        }
+      }
+    };
+
+    const handleBeforeUnload = () => {
+      // Solo limpiar si realmente se está cerrando la sesión
+      // No limpiar en navegación normal
+    };
+
+    // Detectar cuando la página se vuelve visible (usuario regresa)
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Detectar cuando se cierra la página
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Detectar cuando se regresa con el botón atrás
+    window.addEventListener("popstate", () => {
+      if (!isLoading && !isAuthenticated) {
+        const token = localStorage.getItem("admin_token");
+        if (!token) {
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.replace("/admin/login");
+        }
+      }
+    });
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isLoginPage, isLoading, isAuthenticated]);
 
   if (isLoading) {
     return (
