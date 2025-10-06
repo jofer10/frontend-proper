@@ -196,6 +196,22 @@ const AdminLoginPage: React.FC = () => {
           display: none !important;
         }
 
+        /* Fix for iOS Safari password field font size issue */
+        input[type="password"],
+        input[type="text"] {
+          font-size: 16px !important;
+          -webkit-text-size-adjust: 100% !important;
+          text-size-adjust: 100% !important;
+        }
+
+        /* Prevent iOS from zooming on input focus */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+          input[type="password"],
+          input[type="text"] {
+            font-size: 16px !important;
+          }
+        }
+
         .card-flip {
           transform-style: preserve-3d;
           transition: transform 0.7s ease-in-out;
@@ -388,6 +404,9 @@ const AdminLoginPage: React.FC = () => {
                                   ? "none"
                                   : "disc",
                                 textSecurity: showPassword ? "none" : "disc",
+                                fontSize: "16px",
+                                WebkitTextSizeAdjust: "100%",
+                                textSizeAdjust: "100%",
                               } as React.CSSProperties
                             }
                             required
@@ -524,6 +543,9 @@ const AdminLoginPage: React.FC = () => {
                                   ? "none"
                                   : "disc",
                                 textSecurity: showPassword ? "none" : "disc",
+                                fontSize: "16px",
+                                WebkitTextSizeAdjust: "100%",
+                                textSizeAdjust: "100%",
                               } as React.CSSProperties
                             }
                             required

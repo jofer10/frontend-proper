@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { apiService } from "@/lib/api";
 import { EmailLog } from "@/types";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
@@ -33,6 +33,7 @@ const EmailLogsPage: React.FC = () => {
     type: "",
     status: "",
   });
+  const tableRef = useRef<HTMLDivElement>(null);
 
   const loadEmailLogs = async (customFilters?: {
     type: string;
@@ -47,6 +48,16 @@ const EmailLogsPage: React.FC = () => {
         filtersToUse.status || undefined
       );
       setEmailLogs(logs);
+
+      // Hacer scroll hacia la tabla después de cargar los logs
+      setTimeout(() => {
+        if (tableRef.current) {
+          tableRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
     } catch (err) {
       console.error("Error loading email logs:", err);
       setError("Error al cargar los logs de email");
@@ -364,7 +375,10 @@ const EmailLogsPage: React.FC = () => {
                   </div>
 
                   {/* Tabla con scroll */}
-                  <div className="overflow-x-auto max-h-[32rem] overflow-y-auto">
+                  <div
+                    ref={tableRef}
+                    className="overflow-x-auto max-h-[32rem] overflow-y-auto"
+                  >
                     <table className="w-full">
                       <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200 sticky top-0 z-10 shadow-lg">
                         <tr>

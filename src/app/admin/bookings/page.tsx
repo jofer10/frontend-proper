@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -247,6 +247,7 @@ const AdminBookingsPage: React.FC = () => {
   }, [dateRange]);
   const [isResending, setIsResending] = useState<number | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadAdvisors();
@@ -262,6 +263,16 @@ const AdminBookingsPage: React.FC = () => {
       const bookings = await apiService.getAdminBookings();
       setBookings(bookings);
       setHasSearched(true);
+
+      // Hacer scroll hacia la tabla después de cargar las reservas
+      setTimeout(() => {
+        if (tableRef.current) {
+          tableRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
     } catch (error: any) {
       console.error("Error loading bookings:", error);
       setError("Error al cargar las reservas");
@@ -305,6 +316,16 @@ const AdminBookingsPage: React.FC = () => {
       const bookings = await apiService.searchAdminBookings(filters);
       setBookings(bookings);
       setHasSearched(true);
+
+      // Hacer scroll hacia la tabla después de la búsqueda
+      setTimeout(() => {
+        if (tableRef.current) {
+          tableRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
     } catch (error: any) {
       console.error("Error searching bookings:", error);
       setError("Error al buscar las reservas");
@@ -904,7 +925,10 @@ const AdminBookingsPage: React.FC = () => {
                     </div>
 
                     {/* Tabla con scroll */}
-                    <div className="overflow-x-auto max-h-[32rem] overflow-y-auto">
+                    <div
+                      ref={tableRef}
+                      className="overflow-x-auto max-h-[32rem] overflow-y-auto"
+                    >
                       <table className="w-full">
                         <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200 sticky top-0 z-10 shadow-lg">
                           <tr>
@@ -1101,40 +1125,6 @@ const AdminBookingsPage: React.FC = () => {
                 )}
               </CardContent>
             </Card>
-
-            {/* Summary */}
-            {hasSearched && bookings.length > 0 && (
-              <div className="group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-3xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
-                <Card className="relative bg-white/90 backdrop-blur-sm border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500">
-                  <CardContent className="p-8">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl shadow-lg">
-                          <CheckCircle className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-bold text-gray-900">
-                            Resumen de Búsqueda
-                          </h3>
-                          <p className="text-lg text-gray-600 font-semibold">
-                            Se encontraron {bookings.length} reserva
-                            {bookings.length !== 1 ? "s" : ""} con los filtros
-                            aplicados
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-gray-500 font-medium">
-                          Última búsqueda:{" "}
-                          {new Date().toLocaleTimeString("es-ES")}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
           </div>
         </div>
       </div>
