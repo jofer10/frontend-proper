@@ -28,7 +28,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       try {
         const token = localStorage.getItem("admin_token");
         if (!token) {
-          router.push("/admin/login");
+          // Limpiar cualquier cache y redirigir
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.replace("/admin/login");
           return;
         }
 
@@ -46,16 +49,18 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
         if (!response.ok) {
           // Token inválido o expirado - limpiar y redirigir silenciosamente
-          localStorage.removeItem("admin_token");
-          router.push("/admin/login");
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.replace("/admin/login");
           return;
         }
 
         const data = await response.json();
         if (!data.success) {
           // Token inválido - limpiar y redirigir silenciosamente
-          localStorage.removeItem("admin_token");
-          router.push("/admin/login");
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.replace("/admin/login");
           return;
         }
 
@@ -63,8 +68,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       } catch (error) {
         // Error de red o token inválido - limpiar y redirigir silenciosamente
         console.log("Auth check failed, redirecting to login");
-        localStorage.removeItem("admin_token");
-        router.push("/admin/login");
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.replace("/admin/login");
       } finally {
         setIsLoading(false);
       }
@@ -121,8 +127,21 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <div className="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
                 <button
                   onClick={() => {
+                    // Limpiar completamente el localStorage
                     localStorage.removeItem("admin_token");
-                    router.push("/admin/login");
+                    localStorage.clear();
+
+                    // Limpiar sessionStorage también
+                    sessionStorage.clear();
+
+                    // Forzar recarga completa para limpiar cache
+                    if (typeof window !== "undefined") {
+                      // Agregar timestamp para evitar cache
+                      const timestamp = Date.now();
+                      window.location.replace(`/admin/login?t=${timestamp}`);
+                    } else {
+                      router.push("/admin/login");
+                    }
                   }}
                   className="flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-semibold text-sm sm:text-base w-full sm:w-auto justify-center"
                 >
