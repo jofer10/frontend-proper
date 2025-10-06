@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Shield,
@@ -23,6 +23,26 @@ const AdminLoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Efecto para forzar el tamaño de fuente en iOS
+  useEffect(() => {
+    const forceFontSize = () => {
+      const passwordInputs = document.querySelectorAll(
+        'input[type="password"], input[type="text"]'
+      );
+      passwordInputs.forEach((input: any) => {
+        if (input.id === "login-password" || input.id === "register-password") {
+          input.style.fontSize = "16px";
+          input.style.webkitTextSizeAdjust = "100%";
+          input.style.textSizeAdjust = "100%";
+        }
+      });
+    };
+
+    // Forzar tamaño después de un pequeño delay
+    const timeoutId = setTimeout(forceFontSize, 50);
+    return () => clearTimeout(timeoutId);
+  }, [showPassword]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -202,6 +222,8 @@ const AdminLoginPage: React.FC = () => {
           font-size: 16px !important;
           -webkit-text-size-adjust: 100% !important;
           text-size-adjust: 100% !important;
+          -webkit-appearance: none !important;
+          appearance: none !important;
         }
 
         /* Prevent iOS from zooming on input focus */
@@ -209,6 +231,20 @@ const AdminLoginPage: React.FC = () => {
           input[type="password"],
           input[type="text"] {
             font-size: 16px !important;
+            -webkit-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+          }
+        }
+
+        /* Force consistent font size on iOS */
+        @supports (-webkit-touch-callout: none) {
+          input[type="password"],
+          input[type="text"] {
+            font-size: 16px !important;
+            -webkit-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
           }
         }
 
@@ -407,6 +443,10 @@ const AdminLoginPage: React.FC = () => {
                                 fontSize: "16px",
                                 WebkitTextSizeAdjust: "100%",
                                 textSizeAdjust: "100%",
+                                WebkitAppearance: "none",
+                                appearance: "none",
+                                fontFamily: "inherit",
+                                lineHeight: "1.5",
                               } as React.CSSProperties
                             }
                             required
@@ -546,6 +586,10 @@ const AdminLoginPage: React.FC = () => {
                                 fontSize: "16px",
                                 WebkitTextSizeAdjust: "100%",
                                 textSizeAdjust: "100%",
+                                WebkitAppearance: "none",
+                                appearance: "none",
+                                fontFamily: "inherit",
+                                lineHeight: "1.5",
                               } as React.CSSProperties
                             }
                             required
