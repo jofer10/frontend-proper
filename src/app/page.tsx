@@ -10,7 +10,6 @@ import BookingForm from "@/components/forms/BookingForm";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import Alert from "@/components/ui/Alert";
 import {
   Calendar,

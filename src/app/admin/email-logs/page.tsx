@@ -7,7 +7,6 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import {
   Mail,
   Search,
@@ -15,10 +14,8 @@ import {
   RefreshCw,
   CheckCircle,
   XCircle,
-  Clock,
   Send,
   AlertCircle,
-  Calendar,
 } from "lucide-react";
 
 const EmailLogsPage: React.FC = () => {

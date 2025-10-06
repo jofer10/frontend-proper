@@ -18,11 +18,8 @@ import {
   RefreshCw,
   XCircle,
   Database,
-  Send,
   Activity,
   BarChart3,
-  PieChart,
-  Zap,
   X,
 } from "lucide-react";
 

@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import Alert from "@/components/ui/Alert";
@@ -15,12 +13,8 @@ import {
   RefreshCw,
   CheckCircle,
   XCircle,
-  Clock,
   User,
-  Phone,
-  Mail,
   Send,
-  Trash2,
   CalendarDays,
   X,
   ChevronLeft,
