@@ -250,13 +250,6 @@ export default function HomePage() {
 
           {currentStep === "form" && selectedAdvisor && selectedTimeSlot && (
             <div className="space-y-6">
-              {error && (
-                <Alert
-                  type="error"
-                  message={error}
-                  onClose={() => setError(null)}
-                />
-              )}
               <BookingForm
                 advisor={selectedAdvisor}
                 timeSlot={selectedTimeSlot}
@@ -359,6 +352,24 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Notificación flotante de error */}
+      {error && (
+        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-right duration-300">
+          <div className="bg-red-500/90 backdrop-blur-xl border border-red-400/50 text-red-100 px-6 py-4 rounded-2xl shadow-2xl max-w-sm">
+            <div className="flex items-center space-x-3">
+              <div className="w-3 h-3 bg-red-400 rounded-full animate-pulse"></div>
+              <span className="font-medium flex-1">{error}</span>
+              <button
+                onClick={() => setError(null)}
+                className="ml-2 text-red-300 hover:text-red-100 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
